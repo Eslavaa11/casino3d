@@ -10,7 +10,7 @@
 
     <style>
 
-        body { margin: 0; }
+body { margin: 0; }
 
     </style>
 
@@ -26,11 +26,11 @@
 
     import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
 
-    import { OrbitControls } from './orbitcontrols.js';
+    //import { OrbitControls } from './orbitcontrols.js';
 
     import { StereoEffect } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/effects/StereoEffect.js';
 
-
+    import { FBXLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/FBXLoader.js";
 
 
     const scene = new THREE.Scene();
@@ -154,13 +154,80 @@ function handleOrientation(event) {
         ]);
 
 
+// Crea el loader y carga el objeto FBX
+const loader = new FBXLoader();
+loader.load('assets/source/Smoking.fbx', function (object) {
+    // Escala el objeto FBX
+    object.scale.set(1, 1, 1);
 
+    // Añade el objeto FBX a la escena
+    scene.add(object);
+    object.position.set(0,-90,-85);
+});
 
+const light2 = new THREE.SpotLight(0xffffff, 0.5, 10000);
+
+    light2.castShadow = true;
+
+    light2.shadow.mapSize.width = 512 * 2;
+
+    light2.shadow.mapSize.height = 512 * 2;
+
+    light2.shadow.camera.near = 0.1;
+
+    light2.shadow.camera.far = 500;
+
+    light2.position.set(0,120,300);
+
+    scene.add(light2);
 
 
 
 
 // ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// Crear cono
+const geometrySet = new THREE.ConeGeometry( 5, 10, 10 ); 
+const materialSet = new THREE.MeshPhongMaterial( {color: 0xffffff, emissive: 0xffff00} );
+const cone = new THREE.Mesh(geometrySet, materialSet );
+cone.position.set(0,100,-85);
+cone.rotation.x = Math.PI / 1;
+scene.add( cone );
+
+
+
+
+
+
+
+// ------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
