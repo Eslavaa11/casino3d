@@ -9,7 +9,1125 @@
     <title>Proyecto Final Casino</title>
 
     <style>
+<!DOCTYPE html>
 
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>Parcial Andres</title>
+
+    <style>
+
+body { margin: 0; }
+
+    </style>
+
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.145.0/three.js"></script>
+
+<script src="https://cdn.skypack.dev/three@0.129.0/examples/jsm/effects/StereoEffect.js"></script>
+
+<script type="module">
+
+    import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+
+    import { StereoEffect } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/effects/StereoEffect.js';
+
+    import { FBXLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/FBXLoader.js";
+
+
+    const scene = new THREE.Scene();
+
+    scene.background = new THREE.CubeTextureLoader()
+
+        .setPath("texturas/")
+
+        .load([
+
+            '1.jpg',
+
+            '2.jpg',
+
+            '3.jpg',
+
+            '4.jpg',
+
+            '5.jpg',
+
+            '6.jpg'
+
+        ]);
+
+    
+
+   
+
+    
+
+    const renderer = new THREE.WebGLRenderer();
+
+    renderer.shadowMap.enabled = true;
+
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    document.body.appendChild(renderer.domElement);
+
+
+
+
+
+
+// Crea la cámara estéreo
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+// Crea el efecto estéreo
+const stereoEffect = new StereoEffect(renderer);
+camera.position.set(0, 40, 0);
+camera.rotation.set(Math.PI / 2, 0, -Math.PI / 2); 
+// Configura la cámara estéreo
+stereoEffect.eyeSeparation = 1;
+stereoEffect.setSize(window.innerWidth, window.innerHeight);
+
+// Inicializa los controles de órbita
+//const controls = new OrbitControls(camera, renderer.domElement);
+
+// Verifica si el dispositivo soporta la API de dispositivos de orientación
+if (window.DeviceOrientationEvent) {
+    // Agrega un event listener para el evento de orientación del dispositivo
+    window.addEventListener('deviceorientation', handleOrientation, false);
+} else {
+    console.log("El dispositivo no soporta la API de dispositivos de orientación.");
+}
+
+// Función para manejar el evento de orientación del dispositivo
+// Guarda la rotación inicial de la cámara
+const initialRotation = new THREE.Quaternion().copy(camera.quaternion);
+
+function handleOrientation(event) {
+    // Obtén los datos de la orientación del dispositivo
+    const alpha = THREE.MathUtils.degToRad(event.alpha); // Ángulo de rotación alrededor del eje z (en radianes)
+    const beta = THREE.MathUtils.degToRad(event.beta);   // Ángulo de rotación alrededor del eje x (en radianes)
+    const gamma = THREE.MathUtils.degToRad(event.gamma); // Ángulo de rotación alrededor del eje y (en radianes)
+
+    // Calcula las cuaterniones de rotación
+    const quaternion = new THREE.Quaternion();
+
+    // Primero aplicamos la rotación alrededor del eje z (alpha)
+    const qAlpha = new THREE.Quaternion();
+    qAlpha.setFromAxisAngle(new THREE.Vector3(0, 1, 0), alpha);
+    
+    // Luego aplicamos la rotación alrededor del eje x (beta)
+    const qBeta = new THREE.Quaternion();
+    qBeta.setFromAxisAngle(new THREE.Vector3(1, 0, 0), beta);
+    
+    // Finalmente aplicamos la rotación alrededor del eje y (gamma)
+    const qGamma = new THREE.Quaternion();
+    qGamma.setFromAxisAngle(new THREE.Vector3(0, 0, 1), gamma- Math.PI);
+    
+    // Combina las rotaciones
+    quaternion.multiply(qAlpha).multiply(qBeta).multiply(qGamma);
+
+    // Aplica la rotación inicial como referencia
+    quaternion.multiply(initialRotation);
+
+    // Aplica la rotación a la cámara
+    camera.quaternion.copy(quaternion);
+}
+
+    const reflectionCube = new THREE.CubeTextureLoader()
+
+        .setPath("texturas/")
+
+        .load([
+
+            '1.jpg',
+
+            '2.jpg',
+
+            '3.jpg',
+
+            '4.jpg',
+
+            '5.jpg',
+
+            '6.jpg'
+
+        ]);
+
+
+// Crea el loader y carga el objeto FBX
+const loader = new FBXLoader();
+loader.load('assets/source/Smoking.fbx', function (object) {
+    // Escala el objeto FBX
+    object.scale.set(1, 1, 1);
+
+    // Añade el objeto FBX a la escena
+    scene.add(object);
+    object.position.set(0,-90,-85);
+});
+
+const light2 = new THREE.SpotLight(0xffffff, 0.5, 10000);
+
+    light2.castShadow = true;
+
+    light2.shadow.mapSize.width = 512 * 2;
+
+    light2.shadow.mapSize.height = 512 * 2;
+
+    light2.shadow.camera.near = 0.1;
+
+    light2.shadow.camera.far = 500;
+
+    light2.position.set(0,120,300);
+
+    scene.add(light2);
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// Crear cono
+const geometrySet = new THREE.ConeGeometry( 5, 10, 10 ); 
+const materialSet = new THREE.MeshPhongMaterial( {color: 0xffffff, emissive: 0xffff00} );
+const cone = new THREE.Mesh(geometrySet, materialSet );
+cone.position.set(0,100,-85);
+cone.rotation.x = Math.PI / 1;
+scene.add( cone );
+
+
+
+
+
+
+
+// ------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // PARED
+
+    const wallGeometry = new THREE.BoxGeometry(50, 50, 1);
+
+    const textureWall = new THREE.TextureLoader().load("texturas/pared.jpg");
+
+    const normalMap = new THREE.TextureLoader().load("texturas/NM_PARED100.PNG");
+
+    const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, map:textureWall, normalMap:normalMap});
+
+    const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+
+    wall.position.z = -26;
+
+    wall.position.y = 4.5;
+
+    wall.position.x = 0;
+
+    //scene.add(wall);
+
+
+
+
+
+
+
+
+
+    // RULETA 
+
+    const points = [];
+
+    for ( let i = 0; i < 10; i ++ ) {
+
+	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 28 + 1, ( i - 1 ) * 1.8 ) );
+
+    }
+
+    const geometry = new THREE.LatheGeometry( points );
+
+    const textureCas = new THREE.TextureLoader().load("texturas/MADERA.jpg");
+
+    // const normalMapCas = new THREE.TextureLoader().load("");
+
+    const material = new THREE.MeshPhongMaterial( { color: 0xffffff, side: THREE.DoubleSide, 
+
+    map: textureCas,
+
+    shininess: 78, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.1, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno    
+
+    } );
+
+    const lathe = new THREE.Mesh( geometry, material );
+
+    scene.add( lathe );
+
+    lathe.position.z = -35;
+
+    lathe.position.y = 0;
+
+    lathe.position.x = 0;
+
+    // L2
+
+    const points2 = [];
+
+    for ( let i = 0; i < 10; i ++ ) {
+
+	points2.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 25 + 1, ( i - 1 ) * 1.5 ) );
+
+    }
+
+    const geometry2 = new THREE.LatheGeometry( points2 );
+
+    const material2 = new THREE.MeshPhongMaterial( { color: 0xffffff, side: THREE.DoubleSide, 
+
+    map: textureCas, 
+
+    shininess: 80, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.1, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    } );
+
+    const lathe2 = new THREE.Mesh( geometry2, material2 );
+
+    scene.add( lathe2 );
+
+    lathe2.position.z = -35;
+
+    lathe2.position.y = 2.1;
+
+    lathe2.position.x = 0;
+
+    // L3
+
+    const geometry3 = new THREE.TorusGeometry( 27, 3.5, 5, 100 ); 
+
+    const material3 = new THREE.MeshBasicMaterial( { color: 0xffffff } ); 
+
+    const torus = new THREE.Mesh( geometry3, material ); 
+
+    scene.add( torus );
+
+    torus.rotation.x += (Math.PI / 2)
+
+    torus.position.set(0,12.5,-35);
+
+    // L4
+
+    const geometry4 = new THREE.CylinderGeometry(4, 13, 4, 32);
+
+    const material4 = new THREE.MeshPhongMaterial( { color: 0xffffff,map: textureCas,
+
+    shininess: 80, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.1, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno    
+
+    } ); 
+
+    const L4 = new THREE.Mesh(geometry4, material4); 
+
+    scene.add(L4);
+
+    L4.position.set(0,8,-35);
+
+    // ESFERA RULETA
+
+    const geometrySphere = new THREE.SphereGeometry(1, 32, 32);
+
+    const textureSphere = new THREE.TextureLoader().load("texturas/ORO.jpg");
+
+    const materialSphere = new THREE.MeshBasicMaterial({ color: 0xffffff,map: textureSphere,
+
+    shininess: 90, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.3, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    });
+
+    const sphere = new THREE.Mesh(geometrySphere, materialSphere);
+
+    scene.add(sphere);
+
+    // Variables para el movimiento orbital
+
+    let angle = 0.2;
+
+    const radius = 13; // Radio de la órbita
+
+
+
+    
+
+    // L5
+
+    const geometry5 = new THREE.CylinderGeometry(4, 4, 1, 32);
+
+    const texture5 = new THREE.TextureLoader().load("texturas/ORO.jpg");
+
+    const material5 = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture5,
+
+    shininess: 150, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.4, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    } ); 
+
+    const L5 = new THREE.Mesh(geometry5, material5); 
+
+    scene.add(L5);
+
+    L5.position.set(0,10.5,-35);
+
+    // L6
+
+    const geometry6 = new THREE.CylinderGeometry(3, 3.8, 1, 32);
+
+    const L6 = new THREE.Mesh(geometry6, material5); 
+
+    scene.add(L6);
+
+    L6.position.set(0,11.5,-35);
+
+    // L7
+
+    const geometry7 = new THREE.CylinderGeometry(3.5, 2.5, 4, 32);
+
+    const L7 = new THREE.Mesh(geometry7, material5); 
+
+    scene.add(L7);
+
+    L7.position.set(0,13.5,-35);
+
+    // L8
+
+    const geometry8 = new THREE.CylinderGeometry(3.5, 3.5, 3, 32);
+
+    const L8 = new THREE.Mesh(geometry8, material5); 
+
+    scene.add(L8);
+
+    L8.position.set(0,17,-35);
+
+    // L9
+
+    const geometry9 = new THREE.CylinderGeometry(1.5, 3.5, 0.8, 32);
+
+    const L9 = new THREE.Mesh(geometry9, material5); 
+
+    scene.add(L9);
+
+    L9.position.set(0,18.7,-35);
+
+    // L10
+
+    const geometry10 = new THREE.CylinderGeometry(1.8, 1.5, 0.8, 32);
+
+    const L10 = new THREE.Mesh(geometry10, material5); 
+
+    scene.add(L10);
+
+    L10.position.set(0,19.5,-35);
+
+    // L11
+
+    const geometry11 = new THREE.CylinderGeometry(1.8, 1.8, 1.2, 32);
+
+    const L11 = new THREE.Mesh(geometry11, material5); 
+
+    scene.add(L11);
+
+    L11.position.set(0,20.5,-35);
+
+    // L12
+
+    const geometry12 = new THREE.CylinderGeometry(1, 1, 0.3, 32);
+
+    const L12 = new THREE.Mesh(geometry12, material5); 
+
+    scene.add(L12);
+
+    L12.position.set(0,21.3,-35);
+
+    // LCilindrito1
+
+    const geometryLC1 = new THREE.CylinderGeometry(0.4, 0.4, 15, 32);
+
+    const LC1 = new THREE.Mesh(geometryLC1, material5); 
+
+    scene.add(LC1);
+
+    LC1.rotation.x = Math.PI / 2;
+
+    LC1.position.set(0,20.5,-35);
+
+    // LCilindrito2
+
+    const geometryLC2 = new THREE.CylinderGeometry(0.4, 0.4, 15, 32);
+
+    const LC2 = new THREE.Mesh(geometryLC2, material5); 
+
+    scene.add(LC2);
+
+    LC2.rotation.z = Math.PI / 2;
+
+    LC2.position.set(0,20.5,-35);
+
+    // LBaseRuleta
+
+    const geometryBR = new THREE.CylinderGeometry(28, 30, 2, 32);
+
+    const textureBR = new THREE.TextureLoader().load("texturas/BASE.jpg");
+
+    const materialBR = new THREE.MeshPhongMaterial( { color: 0xffffff,map: textureBR,
+
+    shininess: 20, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.1, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno    
+
+    } ); 
+
+    const LBR = new THREE.Mesh(geometryBR, materialBR); 
+
+    scene.add(LBR);
+
+    LBR.position.set(0,1,-35);
+
+
+
+
+
+
+
+    // L13
+
+    const geometry13 = new THREE.CylinderGeometry(1.8, 1.8, 0.3, 32);
+
+    const material13 = new THREE.MeshPhongMaterial( { color: 0xF01900,
+
+    shininess: 40, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    } ); 
+
+    const L13 = new THREE.Mesh(geometry13, material13); 
+
+    scene.add(L13);
+
+    L13.position.set(3,1.1,10);
+
+    // L14
+
+    const material14 = new THREE.MeshPhongMaterial( { color: 0x0C1900,
+
+    shininess: 40, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    } ); 
+
+    const L14 = new THREE.Mesh(geometry13, material14); 
+
+    scene.add(L14);
+
+    L14.position.set(3,1.4,10);
+
+    // L15
+
+    const L15 = new THREE.Mesh(geometry13, material13); 
+
+    scene.add(L15);
+
+    L15.position.set(3,1.7,10);
+
+    // L16
+
+    const L16 = new THREE.Mesh(geometry13, material14); 
+
+    scene.add(L16);
+
+    L16.position.set(3,2,10);
+
+
+
+
+
+
+
+    // NUMEROS RULETA
+
+    const geometryNum = new THREE.RingGeometry( 10, 17, 35 );
+
+    const normalMapNum = new THREE.TextureLoader().load("texturas/NormalMap_NUM.png");
+
+    const textureNum = new THREE.TextureLoader().load("texturas/Numeros.jpg");
+
+    const materialNum = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide,
+
+    map: textureNum, normalMap: normalMapNum,
+
+    shininess: 90, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.2, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    } );
+
+    const Num = new THREE.Mesh( geometryNum, materialNum ); 
+
+    scene.add( Num );
+
+    Num.rotation.x = Math.PI / 2;
+
+    Num.position.set(0,6.7,-35);
+
+    Num.scale.set(1.1,1.1,1.1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // BORDES DE BILLAR
+
+    const baseGeometry = new THREE.BoxGeometry(0.9, 0.8, 9);
+
+    const baseMaterial = new THREE.MeshPhongMaterial({ color: 0xCCB27A});
+
+    const base = new THREE.Mesh(baseGeometry, baseMaterial);
+
+    scene.add(base);
+
+    base.position.z = 10;
+
+    base.position.y = 1;
+
+    base.position.x = -6.5;
+
+
+
+    const base2 = new THREE.Mesh(baseGeometry, baseMaterial);
+
+    scene.add(base2);
+
+    base2.position.z = 10;
+
+    base2.position.y = 1;
+
+    base2.position.x = 6.5;
+
+
+
+    const baseGeometry3 = new THREE.BoxGeometry(13.9, 0.8, 0.7);
+
+    const base3 = new THREE.Mesh(baseGeometry3, baseMaterial);
+
+    scene.add(base3);
+
+    base3.position.z = 14.5;
+
+    base3.position.y = 1;
+
+    base3.position.x = 0;
+
+
+
+    const base4 = new THREE.Mesh(baseGeometry3, baseMaterial);
+
+    scene.add(base4);
+
+    base4.position.z = 5.5;
+
+    base4.position.y = 1;
+
+    base4.position.x = 0;
+
+
+
+    
+
+    // ALFOMBRA DE FICHAS
+
+    const tableGeometry = new THREE.BoxGeometry(13, 0.1, 8.5);
+
+    const tableMaterial = new THREE.MeshPhongMaterial({ color: 0x004F0D});
+
+    const table = new THREE.Mesh(tableGeometry, tableMaterial);
+
+    scene.add(table);
+
+    table.position.z = 10;
+
+    table.position.y = 1;
+
+    table.position.x = 0;
+
+
+
+    // FICHAS
+
+    // L17
+
+    const material17 = new THREE.MeshPhongMaterial({ color: 0xFFFFFF}); 
+
+    const L17 = new THREE.Mesh(geometry13, material14);
+
+    scene.add(L17);
+
+    L17.position.set(-3,1.1,10);
+
+    // L18
+
+    const L18 = new THREE.Mesh(geometry13, material17); 
+
+    scene.add(L18);
+
+    L18.position.set(-3,1.4,10);
+
+    // L19
+
+    const L19 = new THREE.Mesh(geometry13, material14); 
+
+    scene.add(L19);
+
+    L19.position.set(-3,1.7,10);
+
+    // L20
+
+    const L20 = new THREE.Mesh(geometry13, material17); 
+
+    scene.add(L20);
+
+    L20.position.set(-3,2,10);
+
+
+
+   
+
+    // PISO
+
+    const pisoGeometry = new THREE.BoxGeometry(120, 5, 200);
+
+    const pisoGeometry2 = new THREE.BoxGeometry(90, 0.3, 65);
+
+    const pisoGeometry3 = new THREE.BoxGeometry(100, 0.3, 180);
+
+
+
+    const texturePiso = new THREE.TextureLoader().load("texturas/piso.png");
+
+    const normalMapPiso = new THREE.TextureLoader().load("texturas/NM_PISO100.png");
+
+    const pisoMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, map:texturePiso, 
+
+    normalMap:normalMapPiso,
+
+    shininess: 90, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0.3, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    });
+
+
+
+    const texturePiso2 = new THREE.TextureLoader().load("texturas/TAPETE.jpg");
+
+    const texturePiso3 = new THREE.TextureLoader().load("texturas/VERDE.jpg");
+
+    const normalMapVerde = new THREE.TextureLoader().load("texturas/NormalMap_VERDE.png");
+
+
+
+    const pisoMaterial2 = new THREE.MeshPhongMaterial({ color: 0xffffff, map:texturePiso2, 
+
+    shininess: 20, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube // Asigna el mapa de entorno  
+
+    });
+
+    const pisoMaterial3 = new THREE.MeshPhongMaterial({ color: 0xFFFFFF, 
+
+    shininess: 20, // Ajusta la intensidad del reflejo
+
+    reflectivity: 0, // Ajusta la intensidad del reflejo
+
+    envMap: reflectionCube, // Asigna el mapa de entorno  
+
+    map: texturePiso3,
+
+    normalMap: normalMapVerde
+
+    });
+
+
+
+    
+
+    const piso = new THREE.Mesh(pisoGeometry, pisoMaterial);
+
+    const piso2 = new THREE.Mesh(pisoGeometry2, pisoMaterial2);
+
+    const piso3 = new THREE.Mesh(pisoGeometry3, pisoMaterial3);
+
+
+
+    scene.add(piso3);
+
+    piso3.position.set(0,0.2,5)
+
+
+
+    scene.add(piso2);
+
+    piso2.position.set(0,0.5,55)
+
+
+
+    scene.add(piso);
+
+    piso.position.set(0,-2.5,5)
+
+    
+
+    //SOMBRAS
+
+    wall.castShadow = true;
+
+    wall.receiveShadow = true;
+
+    base.castShadow = true;
+
+    base.receiveShadow = true;
+
+    base2.castShadow = true;
+
+    base2.receiveShadow = true;
+
+    base3.castShadow = true;
+
+    base3.receiveShadow = true;
+
+    base4.castShadow = true;
+
+    base4.receiveShadow = true;
+
+    table.castShadow = true;
+
+    table.receiveShadow = true;
+
+
+
+    L4.castShadow = true;
+
+    L4.receiveShadow = true;
+
+    L5.castShadow = true;
+
+    L5.receiveShadow = true;
+
+    L6.castShadow = true;
+
+    L6.receiveShadow = true;
+
+    L7.castShadow = true;
+
+    L7.receiveShadow = true;
+
+    L8.castShadow = true;
+
+    L8.receiveShadow = true;
+
+    L9.castShadow = true;
+
+    L9.receiveShadow = true;
+
+    L10.castShadow = true;
+
+    L10.receiveShadow = true;
+
+    L11.castShadow = true;
+
+    L11.receiveShadow = true;
+
+    L12.castShadow = true;
+
+    L12.receiveShadow = true;
+
+    L13.castShadow = true;
+
+    L13.receiveShadow = true;
+
+    L14.castShadow = true;
+
+    L14.receiveShadow = true;
+
+    L15.castShadow = true;
+
+    L15.receiveShadow = true;
+
+    L16.castShadow = true;
+
+    L16.receiveShadow = true;
+
+    L17.castShadow = true;
+
+    L17.receiveShadow = true;
+
+    L18.castShadow = true;
+
+    L18.receiveShadow = true;
+
+    L19.castShadow = true;
+
+    L19.receiveShadow = true;
+
+    L20.castShadow = true;
+
+    L20.receiveShadow = true;
+
+    LC1.castShadow = true;
+
+    LC1.receiveShadow = true;
+
+    LC2.castShadow = true;
+
+    LC2.receiveShadow = true;
+
+    LBR.castShadow = true;
+
+    LBR.receiveShadow = true;
+
+    sphere.castShadow = true;
+
+    sphere.receiveShadow = true;
+
+    Num.castShadow = true;
+
+    Num.receiveShadow = true;
+
+
+
+    piso.castShadow = true;
+
+    piso.receiveShadow = true;
+
+    piso2.castShadow = true;
+
+    piso2.receiveShadow = true;
+
+    piso3.castShadow = true;
+
+    piso3.receiveShadow = true;
+
+
+
+    lathe.castShadow = true;
+
+    lathe.receiveShadow = true;
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    // CAMARA
+
+    camera.position.z = 100;
+
+    camera.position.y = 70;
+
+    camera.position.x = -10;
+
+    
+
+
+
+
+    // LUCES
+
+    const light = new THREE.SpotLight(0xffffff, 1, 10000);
+
+    light.castShadow = true;
+
+    light.shadow.mapSize.width = 512 * 2;
+
+    light.shadow.mapSize.height = 512 * 2;
+
+    light.shadow.camera.near = 0.1;
+
+    light.shadow.camera.far = 500;
+
+    light.position.z = 0;
+
+    light.position.y = 70;
+
+    light.position.x = 0;
+
+    light.rotation.x = -0.9;
+
+    scene.add(light);
+
+
+
+    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.45);
+
+    scene.add(ambientLight);
+
+
+
+
+
+  
+
+
+
+    function render() {
+
+        requestAnimationFrame(render);
+
+        
+
+        
+
+
+
+      
+
+        
+
+
+
+       
+
+
+
+        
+
+
+
+        // Animations and updates
+
+        Num.rotation.z += 0.02;
+
+        lathe2.rotation.y += -0.02;
+
+        L4.rotation.y += -0.02;
+
+        LC1.rotation.z += 0.02;
+
+        LC2.rotation.y += -0.02;
+
+        L5.rotation.y += -0.02;
+
+        L6.rotation.y += -0.02;
+
+        L7.rotation.y += -0.02;
+
+        L8.rotation.y += -0.02;
+
+        L9.rotation.y += -0.02;
+
+        L10.rotation.y += -0.02;
+
+        L11.rotation.y += -0.02;
+
+        L12.rotation.y += -0.02;
+
+
+
+        const x = L4.position.x + radius * Math.cos(angle);
+
+        const y = L4.position.y + radius * Math.sin(angle);
+
+        const z = L4.position.z + radius * Math.sin(angle);
+
+        sphere.position.set(x, L4.position.y, z);
+
+        angle += 0.02;
+
+        stereoEffect.render(scene, camera);
+
+    }
+
+
+
+    render();
+
+</script>
+
+</body>
+
+</html>
 body { margin: 0; }
 
     </style>
