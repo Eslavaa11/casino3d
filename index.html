@@ -30,7 +30,6 @@
 
     import { StereoEffect } from 'https://cdn.skypack.dev/three@0.129.0/examples/jsm/effects/StereoEffect.js';
 
-    import { FBXLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/FBXLoader.js";
 
 
     const scene = new THREE.Scene();
@@ -154,16 +153,6 @@ function handleOrientation(event) {
         ]);
 
 
-// Crea el loader y carga el objeto FBX
-const loader = new FBXLoader();
-loader.load('assets/rp_eric_rigged_001_u3d.fbx', function (object) {
-    // Escala el objeto FBX
-    object.scale.set(0.5, 0.5, 0.5);
-
-    // Añade el objeto FBX a la escena
-    scene.add(object);
-    object.position.set(0,0,0);
-});
 
 
 
